@@ -1,5 +1,5 @@
 from tkinter import *
-import pandas
+import pandas as pd
 import random
 
 card_words_list = None
@@ -28,6 +28,12 @@ def new_card():
     flip_timer = window.after(TIMER, english_side)
     # remove_words_from_to_learn()
     print(len(to_learn))
+    print(type(to_learn))
+    dict_to_learn = {"row_1": to_learn}
+    df = pd.DataFrame(dict_to_learn)
+    print(df)
+
+    
 
 
 
@@ -41,7 +47,7 @@ def remove_words_from_to_learn():
 
 # data
 
-df = pandas.read_csv("data/french_words.csv")
+df = pd.read_csv("data/french_words.csv")
 to_learn = df.to_dict(orient="records")
 print(to_learn)
 
