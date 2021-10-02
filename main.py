@@ -1,6 +1,9 @@
 from tkinter import *
+from tkinter import messagebox
 import pandas as pd
 import random
+
+import pandas.errors
 
 card_words_list = None
 
@@ -18,33 +21,42 @@ def english_side():
 def new_card():
     global card_words_list, flip_timer
     window.after_cancel(flip_timer)
-    card_words_list = random.choice(to_learn)
+    try:
+        card_words_list = random.choice(to_learn)
+    except IndexError:
+        messagebox.showinfo(title="toutes nos félicitations", message="You learned all the words!")
+        exit(0)
+
     french_word = card_words_list["French"]
     english_word = card_words_list["English"]
     print(f"French word - {french_word}, English word - {english_word}")
     canvas.itemconfig(canvas_language, text="French", fill="black")
     canvas.itemconfig(canvas_word, text=french_word, fill="black")
     flip_timer = window.after(TIMER, english_side)
-    df_to_learn = pd.DataFrame(to_learn)
-    df_to_learn.to_csv("data/words_to_learn.csv", index=False)
+
 
 
 def remove_words_from_to_learn():
     to_learn.remove(card_words_list)
+    df_to_learn = pd.DataFrame(to_learn)
+    df_to_learn.to_csv("data/words_to_learn.csv", index=False)
     new_card()
 
 # data
 
 
 try:
-    new_df = pd.read_csv("data/words_to_learn.csv")
-    to_learn = new_df.to_dict(orient="records")
-    # print(to_learn)
+    df = pd.read_csv("data/words_to_learn.csv")
 
 except FileNotFoundError:
     df = pd.read_csv("data/french_words.csv")
-    to_learn = df.to_dict(orient="records")
-    # print(to_learn)
+
+except pandas.errors.EmptyDataError:
+    messagebox.showinfo(title="Oops", message="No reason to learn any more\nYou learned all the words!")
+    exit(0)
+
+to_learn = df.to_dict(orient="records")
+
 
 # UI
 
