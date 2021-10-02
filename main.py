@@ -1,6 +1,7 @@
 from tkinter import *
 import pandas as pd
 import random
+import ast
 
 card_words_list = None
 
@@ -29,10 +30,13 @@ def new_card():
     # remove_words_from_to_learn()
     print(len(to_learn))
     print(type(to_learn))
-    dict_to_learn = {"row_1": to_learn}
-    df = pd.DataFrame(dict_to_learn)
-    print(df)
-    df.to_csv("data/words_to_learn.csv")
+    # dict_to_learn = {"row_1": to_learn}
+    # df = pd.DataFrame(dict_to_learn)
+    # print(df)
+    df = pd.DataFrame(to_learn)
+    df.to_csv("data/words_to_learn.csv", index=False)
+
+
 
 
 
@@ -48,9 +52,15 @@ def remove_words_from_to_learn():
 
 # data
 
-df = pd.read_csv("data/french_words.csv")
-to_learn = df.to_dict(orient="records")
-print(to_learn)
+try:
+    new_df = pd.read_csv("data/words_to_learn.csv")
+    to_learn = new_df.to_dict(orient="records")
+    print(to_learn)
+
+except FileNotFoundError:
+    df = pd.read_csv("data/french_words.csv")
+    to_learn = df.to_dict(orient="records")
+    print(to_learn)
 
 
 # UI
