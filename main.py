@@ -32,8 +32,9 @@ def new_card():
     dict_to_learn = {"row_1": to_learn}
     df = pd.DataFrame(dict_to_learn)
     print(df)
+    df.to_csv("data/words_to_learn.csv")
 
-    
+
 
 
 
